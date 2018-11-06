@@ -1,17 +1,21 @@
-FROM  debian:stable-slim
+FROM  debian:stretch-slim
 
-ENV   port 8080
-
-LABEL maintainer="Guillaume LAURENT <laurent.guillaume@gmail.com>"
+LABEL maintainer="Guillaume LAURENT <laurent.guillaume@gmail.com>" \
+      org.label-schema.vcs-url="https://github.com/domoticz/domoticz" \
+      org.label-schema.url="https://domoticz.com/" \
+      org.label-schema.name="Domoticz" \
+      org.label-schema.docker.dockerfile="/Dockerfile" \
+      org.label-schema.license="MIT"
 
 RUN \
 # Packages and system setup
 apt-get update && \
 apt-get install -y \
-  curl git \
-  cmake make gcc g++ \
-  libboost-thread-dev libboost-system-dev libcurl4-gnutls-dev libssl-dev libudev-dev libusb-dev zlib1g-dev \
+  curl \
+  git cmake make gcc g++ \
+  libboost-thread-dev libboost-system-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
   python3-dev && \
+# Create user
 adduser --disabled-password --gecos "Domoticz" domoticz && \
 usermod -a -G dialout domoticz && \
 # OpenZWave
@@ -26,21 +30,25 @@ cd domoticz && \
 git pull && \
 cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
 make && \
-# Clean
-apt-get remove -y \
-  git \
-  cmake make gcc g++ && \
+# Rights
+mkdir /data && \
+chown -R domoticz: /opt/domoticz /data && \
+# Clean
+apt-get remove --purge -y git cmake make gcc g++ && \
 apt-get autoremove -y && \
 apt-get clean && \
-rm -rf /var/lib/apt/lists/*
+rm -rf /var/lib/apt/lists/* && \
+rm -rf /opt/domoticz/.git* && \
+rm -rf /opt/open-zwave-read-only/.git*
 
-EXPOSE  6144 ${port}
+EXPOSE  6144 8080
 USER    domoticz
 VOLUME  /data
+# VOLUME  ["/opt/domoticz/scripts", "/opt/domoticz/backups"]
 WORKDIR /opt/domoticz
 
 HEALTHCHECK --interval=5m --timeout=5s \
-   CMD curl -f http://127.0.0.1:${8080}/json.htm?type=command&param=getversion || exit 1
+  CMD curl -f http://127.0.0.1:8080/json.htm?type=command&param=getversion || exit 1
 
-ENTRYPOINT ["/opt/domoticz/domoticz", "-dbase /data/domoticz.db"]
-CMD        ["-www ${port}", "-sslwww 0"]
+ENTRYPOINT ["/opt/domoticz/domoticz", "-dbase", "/data/domoticz.db"]
+CMD        ["-www", "8080", "-sslwww", "0"]
