@@ -1,0 +1,11 @@
+language: cpp
+
+services:
+  - docker
+
+install:
+  - docker build -t domoticz .
+  - docker run -d --name=domoticz -p 8080:8080 domoticz
+
+script:
+  - docker ps | grep -q domoticz

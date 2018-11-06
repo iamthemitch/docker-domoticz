@@ -41,7 +41,7 @@ ftdi_sio 1-1.2:1.0: FTDI USB Serial Device converter detected
 usb 1-1.2: Detected FT232RL
 usb 1-1.2: FTDI USB Serial Device converter now attached to ttyUSB0
 ~~~
-As you can see above, the device node created is` ttyUSB0`.
+As you can see above, the device node created is `ttyUSB0`.
 It does not say where, but it's almost always in `/dev/`.
 The correct tag for passing through this USB device is `--device=/dev/ttyUSB0`.
 
