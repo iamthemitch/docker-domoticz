@@ -11,7 +11,7 @@ RUN \
 # Packages and system setup
 apt-get update && \
 apt-get install -y \
-  curl \
+  curl procps \
   git cmake make gcc g++ \
   libboost-thread-dev libboost-system-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
   python3-dev && \
@@ -43,8 +43,7 @@ rm -rf /opt/open-zwave-read-only/.git*
 
 EXPOSE  6144 8080
 USER    domoticz
-VOLUME  /data
-# VOLUME  ["/opt/domoticz/scripts", "/opt/domoticz/backups"]
+VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/scripts"]
 WORKDIR /opt/domoticz
 
 HEALTHCHECK --interval=5m --timeout=5s \
