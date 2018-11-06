@@ -1,6 +1,6 @@
 # docker-domoticz
 A Domoticz container based on Debian stretch-slim
-[![Build Status](https://travis-ci.org/iamthemitch/docker-domoticz.svg?branch=master)](https://travis-ci.org/iamthemitch/docker-domoticz) [![Build status](https://ci.appveyor.com/api/projects/status/miaha45xx76jy8ul?svg=true)](https://ci.appveyor.com/project/iamthemitch/docker-domoticz) [![](https://images.microbadger.com/badges/image/glaurent/docker-domoticz.svg)](https://microbadger.com/images/glaurent/docker-domoticz "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/glaurent/docker-domoticz.svg)](https://microbadger.com/images/glaurent/docker-domoticz "Get your own version badge on microbadger.com")
+[![Build Status](https://travis-ci.org/iamthemitch/docker-domoticz.svg?branch=master)](https://travis-ci.org/iamthemitch/docker-domoticz) [![](https://images.microbadger.com/badges/image/glaurent/docker-domoticz.svg)](https://microbadger.com/images/glaurent/docker-domoticz) [![](https://images.microbadger.com/badges/version/glaurent/docker-domoticz.svg)](https://microbadger.com/images/glaurent/docker-domoticz)
 
 [![domoticz](https://github.com/domoticz/domoticz/raw/master/www/images/logo.png)](http://www.domoticz.com)
 
@@ -10,14 +10,18 @@ A Domoticz container based on Debian stretch-slim
 `docker pull glaurent/docker-domoticz`
 
 ### Usage
-#### Create named volume:
+#### Create persistent named volume:
 ~~~bash
+docker volume create domoticz_backups
 docker volume create domoticz_data
+docker volume create domoticz_scripts
 ~~~
 #### Create container:
 ~~~bash
 docker create --name=domoticz \
+  -v domoticz_backups:/opt/domoticz/backups \
   -v domoticz_data:/data \
+  -v domoticz_scripts:/opt/domoticz/scripts \
   --device <path to device> \
   -p 8080:8080 \
   -v /etc/localtime:/etc/localtime:ro \
