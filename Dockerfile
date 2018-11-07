@@ -23,6 +23,7 @@ cd /opt && \
 git clone https://github.com/OpenZWave/open-zwave open-zwave-read-only && \
 cd open-zwave-read-only && \
 make && \
+rm -rf /opt/open-zwave-read-only/.git*
 # Domoticz
 cd /opt && \
 git clone https://github.com/domoticz/domoticz.git domoticz && \
@@ -30,20 +31,23 @@ cd domoticz && \
 git pull && \
 cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
 make && \
-# Rights
-mkdir /data && \
-chown -R domoticz: /opt/domoticz /data && \
+rm -rf /opt/domoticz/.git* && \
+# Add plugins
+cd /opt/domoticz/plugins && \
+git clone https://github.com/999LV/BatteryLevel.git BatteryLevel && \
+rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
+# Create missing folders and set rights
+mkdir /data && chown -R domoticz: /data && \
+mkdir /opt/domoticz/backups && \
+chown -R domoticz: /opt/domoticz && \
 # Clean
 apt-get remove --purge -y git cmake make gcc g++ && \
-apt-get autoremove -y && \
-apt-get clean && \
+apt-get autoremove -y && apt-get clean && \
 rm -rf /var/lib/apt/lists/* && \
-rm -rf /opt/domoticz/.git* && \
-rm -rf /opt/open-zwave-read-only/.git*
 
 EXPOSE  6144 8080
 USER    domoticz
-VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/scripts"]
+VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/plugins", "/opt/domoticz/scripts"]
 WORKDIR /opt/domoticz
 
 HEALTHCHECK --interval=5m --timeout=5s \

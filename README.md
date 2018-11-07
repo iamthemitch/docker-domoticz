@@ -1,5 +1,6 @@
 # docker-domoticz
 A Domoticz container based on Debian stretch-slim
+
 [![Build Status](https://travis-ci.org/iamthemitch/docker-domoticz.svg?branch=master)](https://travis-ci.org/iamthemitch/docker-domoticz) [![](https://images.microbadger.com/badges/image/glaurent/docker-domoticz.svg)](https://microbadger.com/images/glaurent/docker-domoticz) [![](https://images.microbadger.com/badges/version/glaurent/docker-domoticz.svg)](https://microbadger.com/images/glaurent/docker-domoticz)
 
 [![domoticz](https://github.com/domoticz/domoticz/raw/master/www/images/logo.png)](http://www.domoticz.com)
@@ -14,6 +15,7 @@ A Domoticz container based on Debian stretch-slim
 ~~~bash
 docker volume create domoticz_backups
 docker volume create domoticz_data
+docker volume create domoticz_plugins
 docker volume create domoticz_scripts
 ~~~
 #### Create container:
@@ -21,6 +23,7 @@ docker volume create domoticz_scripts
 docker create --name=domoticz \
   -v domoticz_backups:/opt/domoticz/backups \
   -v domoticz_data:/data \
+  -v domoticz_plugins:/opt/domoticz/plugins \
   -v domoticz_scripts:/opt/domoticz/scripts \
   --device <path to device> \
   -p 8080:8080 \
