@@ -17,7 +17,7 @@ RUN \
     apt-get update && apt-get install -y \
         curl procps \
         git cmake make gcc g++ \
-        libboost-thread-dev libboost-system-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
+        libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
         python3-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
@@ -37,9 +37,20 @@ RUN \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
+    ## BatteryLevel
     cd /opt/domoticz/plugins && \
     git clone https://github.com/999LV/BatteryLevel.git BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
+    ## Tradfri
+#    ### libcoap
+#    cd /opt && \
+#    git clone --depth 1 --recursive -b dtls https://github.com/home-assistant/libcoap.git && \
+#    cd libcoap && \
+#    ./autogen.sh && \
+#    ./configure --disable-documentation --disable-shared --without-debug CFLAGS="-D COAP_DEBUG_FD=stderr" && \
+#    make && \
+#    make install && \
+#    rm -rf /opt/libcoap/.git* && \
     # Create missing folders and set rights
     mkdir /data && chown -R domoticz: /data && \
     mkdir /opt/domoticz/backups && \
