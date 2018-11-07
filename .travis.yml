@@ -1,11 +1,12 @@
-language: cpp
-
+sudo: required
 services:
   - docker
 
-install:
-  - docker build -t domoticz .
+before_install:
+  - docker build --tag domoticz .
   - docker run -d --name=domoticz -p 8080:8080 domoticz
+  - docker ps | grep -q domoticz
 
 script:
-  - docker ps | grep -q domoticz
+  - wait 120
+  - curl -f http://127.0.0.1:8080/json.htm?type=command&param=getversion
