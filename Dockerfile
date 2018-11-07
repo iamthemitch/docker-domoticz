@@ -23,7 +23,7 @@ cd /opt && \
 git clone https://github.com/OpenZWave/open-zwave open-zwave-read-only && \
 cd open-zwave-read-only && \
 make && \
-rm -rf /opt/open-zwave-read-only/.git*
+rm -rf /opt/open-zwave-read-only/.git* && \
 # Domoticz
 cd /opt && \
 git clone https://github.com/domoticz/domoticz.git domoticz && \
@@ -44,6 +44,7 @@ chown -R domoticz: /opt/domoticz && \
 apt-get remove --purge -y git cmake make gcc g++ && \
 apt-get autoremove -y && apt-get clean && \
 rm -rf /var/lib/apt/lists/* && \
+echo DONE
 
 EXPOSE  6144 8080
 USER    domoticz
