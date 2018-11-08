@@ -24,7 +24,7 @@ RUN \
     usermod -a -G dialout domoticz && \
     # OpenZWave
     cd /opt && \
-    git clone https://github.com/OpenZWave/open-zwave open-zwave-read-only && \
+    git clone --depth 1 https://github.com/OpenZWave/open-zwave open-zwave-read-only && \
     cd open-zwave-read-only && \
     make && \
     rm -rf /opt/open-zwave-read-only/.git* && \
@@ -39,7 +39,7 @@ RUN \
     # Add plugins
     ## BatteryLevel
     cd /opt/domoticz/plugins && \
-    git clone https://github.com/999LV/BatteryLevel.git BatteryLevel && \
+    git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
     ## Tradfri
 #    ### libcoap
