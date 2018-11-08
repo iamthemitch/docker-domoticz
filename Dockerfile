@@ -30,7 +30,7 @@ RUN \
     rm -rf /opt/open-zwave-read-only/.git* && \
     # Domoticz
     cd /opt && \
-    git clone https://github.com/domoticz/domoticz.git domoticz && \
+    git clone https://github.com/domoticz/domoticz domoticz && \
     cd domoticz && \
     git pull && \
     cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
@@ -39,10 +39,10 @@ RUN \
     # Add plugins
     ## BatteryLevel
     cd /opt/domoticz/plugins && \
-    git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
+    git clone --depth 1 https://github.com/999LV/BatteryLevel BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
     ## Tradfri
-#    ### libcoap
+#    ### libcoap - should work with libcoap-1-0-dev
 #    cd /opt && \
 #    git clone --depth 1 --recursive -b dtls https://github.com/home-assistant/libcoap.git && \
 #    cd libcoap && \
@@ -51,6 +51,14 @@ RUN \
 #    make && \
 #    make install && \
 #    rm -rf /opt/libcoap/.git* && \
+    ### pytradfri
+    cd /opt && \
+    git clone --depth 1 https://github.com/ggravlingen/pytradfri pytradfri && \
+    rm -rf /opt/pytradfri/.git* && \
+    ln -s /opt/pytradfri/pytradfri /opt/domoticz/plugins/scripts/python/pytradfri && \
+    ### ikea-tradfri
+    git clone --depth 1 https://gitlab.com/iamthemitch/ikea-tradfri ikea-tradfri && \
+    rm -rf /opt/ikea-tradfri/.git* && \
     # Create missing folders and set rights
     mkdir /data && chown -R domoticz: /data && \
     mkdir /opt/domoticz/backups && \
