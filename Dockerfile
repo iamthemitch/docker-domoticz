@@ -1,5 +1,3 @@
-FROM  debian:stretch-slim
-
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -11,6 +9,8 @@ LABEL org.label-schema.name           = "Domoticz"
 LABEL org.label-schema.description    = "Domoticz container using Debian stable-slim"
 LABEL org.label-schema.url            = "https://domoticz.com"
 LABEL org.label-schema.schema-version = "1.0.0-rc1"
+
+FROM  debian:stretch-slim
 
 RUN \
     # Packages and system setup
@@ -24,13 +24,13 @@ RUN \
     usermod -a -G dialout domoticz && \
     # OpenZWave
     cd /opt && \
-    git clone --depth 1 https://github.com/OpenZWave/open-zwave open-zwave-read-only && \
+    git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
     cd open-zwave-read-only && \
     make && \
     rm -rf /opt/open-zwave-read-only/.git* && \
     # Domoticz
     cd /opt && \
-    git clone https://github.com/domoticz/domoticz domoticz && \
+    git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
     git pull && \
     cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
@@ -39,11 +39,11 @@ RUN \
     # Add plugins
     ## BatteryLevel
     cd /opt/domoticz/plugins && \
-    git clone --depth 1 https://github.com/999LV/BatteryLevel BatteryLevel && \
+    git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
     ## Tradfri
     cd /opt && \
-    git clone --depth 1 https://github.com/ggravlingen/pytradfri pytradfri && \
+    git clone --depth 1 https://github.com/ggravlingen/pytradfri.git pytradfri && \
     rm -rf /opt/pytradfri/.git* && \
     ln -s /opt/pytradfri/pytradfri /opt/domoticz/scripts/python/pytradfri && \
     # Create missing folders and set rights
