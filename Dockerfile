@@ -1,3 +1,5 @@
+FROM  debian:stretch-slim
+
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -9,8 +11,6 @@ LABEL org.label-schema.name           = "Domoticz"
 LABEL org.label-schema.description    = "Domoticz container using Debian stable-slim"
 LABEL org.label-schema.url            = "https://domoticz.com"
 LABEL org.label-schema.schema-version = "1.0.0-rc1"
-
-FROM  debian:stretch-slim
 
 RUN \
     # Packages and system setup
