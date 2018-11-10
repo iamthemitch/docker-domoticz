@@ -3,14 +3,14 @@ FROM  debian:stretch-slim
 ARG BUILD_DATE
 ARG VCS_REF
 
-LABEL maintainer                      = "Guillaume LAURENT <laurent.guillaume@gmail.com>"
-LABEL org.label-schema.build-date     = $BUILD_DATE
-LABEL org.label-schema.vcs-url        = "https://github.com/iamthemitch/docker-domoticz.git"
-LABEL org.label-schema.vcs-ref        = $VCS_REF
-LABEL org.label-schema.name           = "Domoticz"
-LABEL org.label-schema.description    = "Domoticz container using Debian stable-slim"
-LABEL org.label-schema.url            = "https://domoticz.com"
-LABEL org.label-schema.schema-version = "1.0.0-rc1"
+LABEL maintainer                      "Guillaume LAURENT <laurent.guillaume@gmail.com>"
+LABEL org.label-schema.build-date     $BUILD_DATE
+LABEL org.label-schema.vcs-url        "https://github.com/iamthemitch/docker-domoticz.git"
+LABEL org.label-schema.vcs-ref        $VCS_REF
+LABEL org.label-schema.name           "Domoticz"
+LABEL org.label-schema.description    "Domoticz container using Debian stable-slim"
+LABEL org.label-schema.url            "https://domoticz.com"
+LABEL org.label-schema.schema-version "1.0.0-rc1"
 
 RUN \
     # Packages and system setup
