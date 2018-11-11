@@ -12,6 +12,9 @@ LABEL org.label-schema.description    "Domoticz container using Debian stable-sl
 LABEL org.label-schema.url            "https://domoticz.com"
 LABEL org.label-schema.schema-version "1.0.0-rc1"
 
+ENV WWW    8080
+ENV SSLWWW 0
+
 RUN \
     # Packages and system setup
     apt-get update && apt-get install -y \
@@ -56,13 +59,14 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     echo DONE
 
+WORKDIR /opt/domoticz
+COPY start.sh .
+
 EXPOSE  6144 8080
 USER    domoticz
 VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/plugins", "/opt/domoticz/scripts"]
-WORKDIR /opt/domoticz
 
 HEALTHCHECK --interval=5m --timeout=5s \
   CMD curl -f http://127.0.0.1:8080/json.htm?type=command&param=getversion || exit 1
 
-ENTRYPOINT ["/opt/domoticz/domoticz", "-dbase", "/data/domoticz.db"]
-CMD        ["-www", "8080", "-sslwww", "0"]
+ENTRYPOINT ["/opt/domoticz/start.sh"]
