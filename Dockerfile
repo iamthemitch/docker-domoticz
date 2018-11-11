@@ -1,4 +1,4 @@
-FROM  debian:stretch-slim
+FROM debian:stretch-slim
 
 ARG BUILD_DATE
 ARG VCS_REF
