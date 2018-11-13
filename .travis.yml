@@ -5,9 +5,18 @@ language: cpp
 services:
   - docker
 
+env:
+  matrix:
+    - name: "latest"
+      DOCKER_BUILD=domoticz:latest
+      DOCKERFILE=Dockerfile
+    - name: "alpine"
+      DOCKER_BUILD=domoticz:alpine
+      DOCKERFILE=Dockerfile.alpine
+      
 install:
-  - docker build --tag domoticz .
-  - docker run -d --name=domoticz -p 8080:8080 domoticz
+  - docker build -t ${DOCKER_BUILD} -f ${DOCKERFILE} .
+  - docker run -d --name=domoticz -p 8080:8080 ${DOCKER_BUILD}
 
 postinstall:
   - sleep 120
