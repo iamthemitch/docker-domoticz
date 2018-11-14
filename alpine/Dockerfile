@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -10,7 +10,7 @@ LABEL org.label-schema.build-date     $BUILD_DATE
 LABEL org.label-schema.vcs-url        "https://github.com/iamthemitch/docker-domoticz.git"
 LABEL org.label-schema.vcs-ref        $VCS_REF
 LABEL org.label-schema.name           "Domoticz"
-LABEL org.label-schema.description    "Domoticz container using Debian stable-slim"
+LABEL org.label-schema.description    "Domoticz container using Alpine"
 LABEL org.label-schema.url            "https://domoticz.com"
 LABEL org.label-schema.schema-version "1.0.0-rc1"
 
@@ -19,14 +19,17 @@ ENV SSLWWW $DEFAULT_SSLWWW
 
 RUN \
     # Packages and system setup
-    apt-get update && apt-get install -y \
-        curl procps \
-        build-essential cmake git \
-        libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
-        python3-dev && \
+    #  Not using libexecinfo-dev as causing compilation issues
+    apk add --no-cache \
+        curl \
+        coreutils build-base cmake git shadow \
+        boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
+        boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
+        python3 python3-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
+    mkdir /opt && \
     # OpenZWave
     cd /opt && \
     git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
@@ -55,9 +58,8 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apt-get remove --purge -y build-essential cmake git && \
-    apt-get autoremove -y && apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
+    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+    rm -rf /var/cache/apk/* && \
     echo DONE
 
 WORKDIR /opt/domoticz
