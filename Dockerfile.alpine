@@ -17,6 +17,7 @@ ENV SSLWWW 0
 
 RUN \
     # Packages and system setup
+    #  Not using libexecinfo-dev as causing compilation issues
     apk add --no-cache \
         curl \
         coreutils build-base cmake git shadow \
@@ -55,7 +56,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libexecinfo-dev openssl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev python3-dev && \
+    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev python3-dev && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 
