@@ -2,6 +2,8 @@ FROM debian:stretch-slim
 
 ARG BUILD_DATE
 ARG VCS_REF
+ARG DEFAULT_WWW    8080
+ARG DEFAULT_SSLWWW 0
 
 LABEL maintainer                      "Guillaume LAURENT <laurent.guillaume@gmail.com>"
 LABEL org.label-schema.build-date     $BUILD_DATE
@@ -12,17 +14,16 @@ LABEL org.label-schema.description    "Domoticz container using Debian stable-sl
 LABEL org.label-schema.url            "https://domoticz.com"
 LABEL org.label-schema.schema-version "1.0.0-rc1"
 
-ENV WWW    8080
-ENV SSLWWW 0
+ENV WWW    $DEFAULT_WWW
+ENV SSLWWW $DEFAULT_SSLWWW
 
 RUN \
     # Packages and system setup
     apt-get update && apt-get install -y \
         curl procps \
         build-essential cmake git \
-        libboost-atomic1.62.0 libboost-chrono1.62.0 libboost-date-time1.62.0 libboost-thread1.62 libboost-system1.62 libcoap-1-0 libssl1.0.2 libudev1 libusb-0.1-4 zlib1g \
-        libboost-thread1.62-dev libboost-system1.62-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
-        python3 python3-dev && \
+        libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
+        python3-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
@@ -54,7 +55,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apt-get remove --purge -y build-essential cmake git libboost-thread1.62-dev libboost-system1.62-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev python3-dev && \
+    apt-get remove --purge -y build-essential cmake git && \
     apt-get autoremove -y && apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo DONE

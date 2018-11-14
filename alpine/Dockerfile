@@ -2,6 +2,8 @@ FROM alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
+ARG DEFAULT_WWW    8080
+ARG DEFAULT_SSLWWW 0
 
 LABEL maintainer                      "Guillaume LAURENT <laurent.guillaume@gmail.com>"
 LABEL org.label-schema.build-date     $BUILD_DATE
@@ -12,8 +14,8 @@ LABEL org.label-schema.description    "Domoticz container using Alpine"
 LABEL org.label-schema.url            "https://domoticz.com"
 LABEL org.label-schema.schema-version "1.0.0-rc1"
 
-ENV WWW    8080
-ENV SSLWWW 0
+ENV WWW    $DEFAULT_WWW
+ENV SSLWWW $DEFAULT_SSLWWW
 
 RUN \
     # Packages and system setup

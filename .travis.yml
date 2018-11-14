@@ -12,7 +12,7 @@ env:
       DOCKERFILE=Dockerfile
     - name: "alpine"
       DOCKER_BUILD=domoticz:alpine
-      DOCKERFILE=Dockerfile.alpine
+      DOCKERFILE=alpine/Dockerfile
       
 install:
   - docker build -t ${DOCKER_BUILD} -f ${DOCKERFILE} .
