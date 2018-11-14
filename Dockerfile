@@ -2,8 +2,8 @@ FROM debian:stretch-slim
 
 ARG BUILD_DATE
 ARG VCS_REF
-ARG DEFAULT_WWW    8080
-ARG DEFAULT_SSLWWW 0
+ARG DEFAULT_WWW=8080
+ARG DEFAULT_SSLWWW=0
 
 LABEL maintainer                      "Guillaume LAURENT <laurent.guillaume@gmail.com>"
 LABEL org.label-schema.build-date     $BUILD_DATE
