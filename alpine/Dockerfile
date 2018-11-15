@@ -17,7 +17,11 @@ LABEL org.label-schema.schema-version "1.0.0-rc1"
 ENV WWW    $DEFAULT_WWW
 ENV SSLWWW $DEFAULT_SSLWWW
 
+WORKDIR /opt/domoticz
+COPY *.sh .
+
 RUN \
+    chmod +x *.sh && \
     # Packages and system setup
     #  Not using libexecinfo-dev as causing compilation issues
     apk add --no-cache \
@@ -61,10 +65,6 @@ RUN \
     apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
     rm -rf /var/cache/apk/* && \
     echo DONE
-
-WORKDIR /opt/domoticz
-COPY start.sh .
-COPY healthcheck.sh .
 
 EXPOSE  6144 ${WWW}
 USER    domoticz
