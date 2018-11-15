@@ -17,12 +17,7 @@ LABEL org.label-schema.schema-version "1.0.0-rc1"
 ENV WWW    $DEFAULT_WWW
 ENV SSLWWW $DEFAULT_SSLWWW
 
-WORKDIR /opt/domoticz
-COPY *.sh /opt/domoticz/
-
 RUN \
-    # Force exec rights
-    chmod +x *.sh && \
     # Packages and system setup
     apt-get update && apt-get install -y \
         curl procps \
@@ -65,7 +60,12 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     echo DONE
 
-EXPOSE  6144 $WWW
+WORKDIR /opt/domoticz
+COPY start.sh .
+COPY healthcheck.sh .
+RUN chmod +x *.sh
+
+EXPOSE  6144 ${WWW}
 USER    domoticz
 VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/plugins", "/opt/domoticz/scripts"]
 
