@@ -63,6 +63,7 @@ RUN \
 WORKDIR /opt/domoticz
 COPY start.sh .
 COPY healthcheck.sh .
+RUN chmod +x *.sh
 
 EXPOSE  6144 ${WWW}
 USER    domoticz

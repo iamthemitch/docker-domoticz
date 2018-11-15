@@ -5,22 +5,24 @@ language: cpp
 services:
   - docker
 
-env:
-  matrix:
-    - name: "latest"
+matrix:
+  include:
+  - name: "latest"
+    env:
       DOCKER_BUILD=domoticz:latest
-      DOCKERFILE=Dockerfile
-    - name: "alpine"
+      DOCKER_PATH=.
+  - name: "alpine"
+    env:
       DOCKER_BUILD=domoticz:alpine
-      DOCKERFILE=alpine/Dockerfile
-      
+      DOCKER_PATH=alpine
+
 install:
-  - docker build -t ${DOCKER_BUILD} -f ${DOCKERFILE} .
+  - docker build -t ${DOCKER_BUILD} -f ${DOCKER_PATH}/Dockerfile ${DOCKER_PATH}
   - docker run -d --name=domoticz -p 8080:8080 ${DOCKER_BUILD}
 
 postinstall:
   - sleep 120
 
 script:
-  - docker ps | grep domoticz
+  - docker ps | grep ${DOCKER_BUILD}
   - curl -f "http://127.0.0.1:8080/json.htm?type=command&param=getversion"
