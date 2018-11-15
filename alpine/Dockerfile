@@ -63,8 +63,8 @@ RUN \
     echo DONE
 
 WORKDIR /opt/domoticz
-COPY start.sh .
-COPY healthcheck.sh .
+COPY ../start.sh .
+COPY ../healthcheck.sh .
 
 EXPOSE  6144 ${WWW}
 USER    domoticz
