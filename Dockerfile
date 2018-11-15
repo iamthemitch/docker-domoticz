@@ -18,9 +18,10 @@ ENV WWW    $DEFAULT_WWW
 ENV SSLWWW $DEFAULT_SSLWWW
 
 WORKDIR /opt/domoticz
-COPY *.sh .
+COPY *.sh /opt/domoticz/
 
 RUN \
+    # Force exec rights
     chmod +x *.sh && \
     # Packages and system setup
     apt-get update && apt-get install -y \
@@ -64,7 +65,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     echo DONE
 
-EXPOSE  6144 ${WWW}
+EXPOSE  6144 $WWW
 USER    domoticz
 VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/plugins", "/opt/domoticz/scripts"]
 
