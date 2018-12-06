@@ -23,7 +23,7 @@ RUN \
         curl procps \
         build-essential cmake git \
         libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
-        python3-dev && \
+        python3-dev py3-setuptools && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
@@ -45,7 +45,9 @@ RUN \
     cd /opt/domoticz/plugins && \
     git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
-    ## Tradfri
+    ## ouimeaux (Belkin WeMo)
+    easy_install3 ouimeaux && \
+    ## Tradfri (Ikea TRÅDFRI)
     cd /opt && \
     git clone --depth 1 https://github.com/ggravlingen/pytradfri.git pytradfri && \
     rm -rf /opt/pytradfri/.git* && \
