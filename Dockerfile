@@ -20,12 +20,12 @@ ENV SSLWWW $DEFAULT_SSLWWW
 RUN \
     # Packages and system setup
     apt-get update && apt-get install -y \
-        curl procps \
+        curl procps wget \
         build-essential git \
         libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
         python3-dev && \
     # CMake 3.14.0 or higher is required
-    curl -O https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
     tar -xzvf cmake-3.14.4.tar.gz && \
     rm cmake-3.14.4.tar.gz && \
     cd cmake-3.14.4 && \
@@ -67,7 +67,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apt-get remove --purge -y build-essential cmake git && \
+    apt-get remove --purge -y build-essential git wget && \
     apt-get autoremove -y && apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo DONE

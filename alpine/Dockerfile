@@ -27,7 +27,7 @@ RUN \
         boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    curl -O https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
     tar -xzvf cmake-3.14.4.tar.gz && \
     rm cmake-3.14.4.tar.gz && \
     cd cmake-3.14.4 && \
@@ -69,7 +69,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+    apk del coreutils build-base git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 
