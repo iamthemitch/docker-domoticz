@@ -27,7 +27,7 @@ RUN \
         boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
+    curl -O https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
     tar -xzvf cmake-3.14.4.tar.gz && \
     rm cmake-3.14.4.tar.gz && \
     cd cmake-3.14.4 && \
