@@ -23,22 +23,12 @@ RUN \
     apk add --no-cache \
         curl \
         coreutils build-base git shadow \
-        boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
+        boost boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
         boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
-    tar -xzf cmake-3.14.4.tar.gz && \
-    rm cmake-3.14.4.tar.gz && \
-    cd cmake-3.14.4 && \
-    ./bootstrap && \
-    make && \
-    make install && \
-    cd ..  && \
-    rm -Rf cmake-3.14.4 && \
+    apk add --no-cache --virtual=build-dependencies-edge --repository http://dl-3.alpinelinux.org/alpine/edge/main/ cmake && \
     cmake --version && \
-    # Boost
-    export BOOST_LIBRARYDIR=/usr/lib && export BOOST_ROOT=/usr/lib && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
@@ -71,7 +61,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apk del coreutils build-base git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+    apk del coreutils build-base git cmake shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 
