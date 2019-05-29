@@ -43,7 +43,7 @@ RUN \
     cd /opt && \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DBoost_DEBUG=ON -DBOOST_ROOT=/usr/lib -DBOOST_LIBRARYDIR=/usr/lib CMakeLists.txt && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_STATIC_BOOST=OFF CMakeLists.txt && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
