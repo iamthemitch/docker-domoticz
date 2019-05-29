@@ -25,8 +25,8 @@ RUN \
         libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
         python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
-    tar -xzvf cmake-3.14.4.tar.gz && \
+    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
+    tar -xzf cmake-3.14.4.tar.gz && \
     rm cmake-3.14.4.tar.gz && \
     cd cmake-3.14.4 && \
     ./bootstrap && \
