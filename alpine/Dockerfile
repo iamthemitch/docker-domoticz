@@ -37,6 +37,8 @@ RUN \
     cd ..  && \
     rm -Rf cmake-3.14.4 && \
     cmake --version && \
+    # Boost
+    export BOOST_LIBRARYDIR=/usr/lib && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
