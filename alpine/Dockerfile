@@ -29,7 +29,7 @@ RUN \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
-    mkdir /opt && \
+    # mkdir /opt && \
     # OpenZWave
     cd /opt && \
     git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
