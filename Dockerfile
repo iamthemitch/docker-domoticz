@@ -21,12 +21,24 @@ RUN \
     # Packages and system setup
     apt-get update && apt-get install -y \
         curl procps \
-        build-essential cmake git \
+        build-essential git \
         libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
         python3-dev && \
+    # CMake 3.14.0 or higher is required
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
+    tar -xzvf cmake-3.14.4.tar.gz && \
+    rm cmake-3.14.4.tar.gz && \
+    cd cmake-3.14.4 && \
+    ./bootstrap && \
+    make && \
+    make install && \
+    cd ..  && \
+    rm -Rf cmake-3.14.4 && \
+    cmake --version && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
+    mkdir -p /opt && \
     # OpenZWave
     cd /opt && \
     git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
