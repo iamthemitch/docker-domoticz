@@ -22,7 +22,7 @@ RUN \
     apt-get update && apt-get install -y \
         curl procps wget \
         git \
-        libudev-dev && \
+        libcurl3-gnutls libudev-dev python3-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
