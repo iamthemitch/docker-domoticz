@@ -28,12 +28,12 @@ RUN \
     usermod -a -G dialout domoticz && \
     # Domoticz
     mkdir -p /opt/domoticz && cd /opt/domoticz && \
-    wget -O domoticz_release.tgz "http://www.domoticz.com/download.php?channel=release&type=release&system=linux&machine=x86_64" && \
-    tar xvfz domoticz_release.tgz && \
+    wget -O domoticz_release.tgz --quiet "http://www.domoticz.com/download.php?channel=release&type=release&system=linux&machine=x86_64" && \
+    tar -xzf domoticz_release.tgz && \
 	  rm domoticz_release.tgz && \
     # Add plugins
     ## BatteryLevel
-    cd /opt/domoticz/plugins && \
+    mkdir -p /opt/domoticz/plugins && cd /opt/domoticz/plugins && \
     git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
     ## Tradfri
