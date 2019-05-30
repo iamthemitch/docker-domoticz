@@ -1,4 +1,4 @@
-FROM alpine
+FROM debian:stretch-slim
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -10,7 +10,7 @@ LABEL org.label-schema.build-date     $BUILD_DATE
 LABEL org.label-schema.vcs-url        "https://github.com/iamthemitch/docker-domoticz.git"
 LABEL org.label-schema.vcs-ref        $VCS_REF
 LABEL org.label-schema.name           "Domoticz"
-LABEL org.label-schema.description    "Domoticz container using Alpine"
+LABEL org.label-schema.description    "Domoticz container using Debian stable-slim"
 LABEL org.label-schema.url            "https://domoticz.com"
 LABEL org.label-schema.schema-version "1.0.0-rc1"
 
@@ -19,36 +19,18 @@ ENV SSLWWW $DEFAULT_SSLWWW
 
 RUN \
     # Packages and system setup
-    #  Not using libexecinfo-dev as causing compilation issues
-    apk add --no-cache \
-        curl \
-        coreutils build-base git shadow \
-        boost boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
-        boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
-        python3 python3-dev && \
-    # CMake 3.14.0 or higher is required
-    apk add --no-cache --virtual=build-dependencies-edge --repository http://dl-3.alpinelinux.org/alpine/edge/main/ cmake && \
-    cmake --version && \
+    apt-get update && apt-get install -y \
+        curl procps wget \
+        git \
+        libcurl3 libudev-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
-    mkdir -p /opt && \
-    # OpenZWave
-    cd /opt && \
-    git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
-    cd open-zwave-read-only && \
-    make && \
-    rm -rf /opt/open-zwave-read-only/.git* && \
     # Domoticz
-    cd /opt && \
-    git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
-    cd domoticz && \
-    cmake \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DUSE_STATIC_BOOST=OFF \
-      -Wno-dev -Wno-deprecated && \
-    make && \
-    rm -rf /opt/domoticz/.git* && \
+    mkdir -p /opt/domoticz && cd /opt/domoticz && \
+    wget -O domoticz_release.tgz "http://www.domoticz.com/download.php?channel=release&type=release&system=linux&machine=x86_64" && \
+    tar xvfz domoticz_release.tgz && \
+	  rm domoticz_release.tgz && \
     # Add plugins
     ## BatteryLevel
     cd /opt/domoticz/plugins && \
@@ -60,12 +42,14 @@ RUN \
     rm -rf /opt/pytradfri/.git* && \
     ln -s /opt/pytradfri/pytradfri /opt/domoticz/scripts/python/pytradfri && \
     # Create missing folders and set rights
-    mkdir /data && chown -R domoticz: /data && \
-    mkdir /opt/domoticz/backups && \
-    chown -R domoticz: /opt/domoticz && \
+    mkdir -p /data && \
+    mkdir -p /opt/domoticz/backups && \
+    touch /data/domoticz.db && \
+    chown -R domoticz: /data /opt/domoticz && \
     # Clean
-    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
-    rm -rf /var/cache/apk/* && \
+    apt-get remove --purge -y git wget && \
+    apt-get autoremove -y && apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
     echo DONE
 
 WORKDIR /opt/domoticz

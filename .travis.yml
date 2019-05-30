@@ -15,6 +15,10 @@ matrix:
     env:
       DOCKER_BUILD=domoticz:alpine
       DOCKER_PATH=alpine
+  - name: "easy"
+    env:
+      DOCKER_BUILD=domoticz:easy
+      DOCKER_PATH=easy
 
 install:
   - docker build -t ${DOCKER_BUILD} -f ${DOCKER_PATH}/Dockerfile ${DOCKER_PATH}

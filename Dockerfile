@@ -51,7 +51,7 @@ RUN \
     cd domoticz && \
     cmake \
       -DCMAKE_BUILD_TYPE=Release \
-      -Wno-dev && \
+      -Wno-dev -Wno-deprecated && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
