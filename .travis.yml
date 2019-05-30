@@ -15,10 +15,10 @@ matrix:
 #    env:
 #      DOCKER_BUILD=domoticz:alpine
 #      DOCKER_PATH=alpine
-  - name: "easy"
+  - name: "debian-easy"
     env:
-      DOCKER_BUILD=domoticz:easy
-      DOCKER_PATH=easy
+      DOCKER_BUILD=domoticz:debian-easy
+      DOCKER_PATH=debian-easy
 
 install:
   - docker build -t ${DOCKER_BUILD} -f ${DOCKER_PATH}/Dockerfile ${DOCKER_PATH}
