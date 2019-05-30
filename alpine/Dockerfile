@@ -22,14 +22,17 @@ RUN \
     #  Not using libexecinfo-dev as causing compilation issues
     apk add --no-cache \
         curl \
-        coreutils build-base cmake git shadow \
-        boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
+        coreutils build-base git shadow \
+        boost boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
         boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
         python3 python3-dev && \
+    # CMake 3.14.0 or higher is required
+    apk add --no-cache --virtual=build-dependencies-edge --repository http://dl-3.alpinelinux.org/alpine/edge/main/ cmake && \
+    cmake --version && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
-    mkdir /opt && \
+    mkdir -p /opt && \
     # OpenZWave
     cd /opt && \
     git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
@@ -40,7 +43,10 @@ RUN \
     cd /opt && \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
-    cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt && \
+    cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DUSE_STATIC_BOOST=OFF \
+      -Wno-dev -Wno-deprecated && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
