@@ -43,7 +43,10 @@ RUN \
     cd /opt && \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_STATIC_BOOST=OFF CMakeLists.txt && \
+    cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DUSE_STATIC_BOOST=OFF \
+      -Wno-dev && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
@@ -61,7 +64,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apk del coreutils build-base git cmake shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 
