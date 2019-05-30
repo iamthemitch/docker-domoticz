@@ -7,9 +7,9 @@ services:
 
 matrix:
   include:
-  - name: "latest"
+  - name: "debian"
     env:
-      DOCKER_BUILD=domoticz:latest
+      DOCKER_BUILD=domoticz:debian
       DOCKER_PATH=.
   - name: "alpine"
     env:
