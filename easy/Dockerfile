@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:8-slim
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -10,7 +10,7 @@ LABEL org.label-schema.build-date     $BUILD_DATE
 LABEL org.label-schema.vcs-url        "https://github.com/iamthemitch/docker-domoticz.git"
 LABEL org.label-schema.vcs-ref        $VCS_REF
 LABEL org.label-schema.name           "Domoticz"
-LABEL org.label-schema.description    "Domoticz container using Debian stable-slim"
+LABEL org.label-schema.description    "Domoticz container using Debian jessie/8-slim"
 LABEL org.label-schema.url            "https://domoticz.com"
 LABEL org.label-schema.schema-version "1.0.0-rc1"
 
@@ -22,7 +22,7 @@ RUN \
     apt-get update && apt-get install -y \
         curl procps wget \
         git \
-        libcurl3 libudev-dev && \
+        libudev-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
