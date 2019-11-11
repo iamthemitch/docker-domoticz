@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:10-slim
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -22,19 +22,25 @@ RUN \
     apt-get update && apt-get install -y \
         curl procps wget \
         build-essential git \
-        libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
+        libcoap-1-0-dev libcurl4-gnutls-dev libssl-dev libudev-dev libusb-dev zlib1g-dev \
         python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
-    tar -xzf cmake-3.15.5.tar.gz && \
-    rm cmake-3.15.5.tar.gz && \
+    cd && wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
+    tar -xzf cmake-3.15.5.tar.gz && rm cmake-3.15.5.tar.gz && \
     cd cmake-3.15.5 && \
     ./bootstrap >/dev/null && \
     make >/dev/null  && \
     make install >/dev/null  && \
-    cd .. && \
-    rm -Rf cmake-3.15.5 && \
+    cd && rm -Rf cmake-3.15.5 && \
     cmake --version && \
+    # Boost
+    cd && wget --quiet https://dl.bintray.com/boostorg/release/1.71.0/source/boost_1_71_0.tar.gz && \
+    tar -xzf boost_1_71_0.tar.gz && rm boost_1_71_0.tar.gz && \
+    cd boost_1_71_0 && \
+    ./bootstrap.sh >/dev/null && \
+    ./b2 stage threading=multi link=static --with-thread --with-system && \
+    ./b2 install threading=multi link=static --with-thread --with-system && \
+    cd && rm -Rf boost && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
@@ -49,9 +55,12 @@ RUN \
     cd /opt && \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
+#    -DUSE_OPENSSL_STATIC=OFF \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
-        -Wno-dev && \
+        -DUSE_OPENSSL_STATIC=OFF \
+        -Wno-dev -Wno-deprecated \
+        CMakeLists.txt && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins

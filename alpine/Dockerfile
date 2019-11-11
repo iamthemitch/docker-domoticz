@@ -22,23 +22,28 @@ RUN \
     apk add --no-cache --virtual=build-dependencies \
         coreutils build-base git shadow \
         linux-headers \
-        boost-dev curl-dev eudev-dev libcoap-dev libftdi1-dev libressl-dev libusb-compat-dev libusb-dev mosquitto-dev sqlite-dev zlib-dev && \
+        curl-dev eudev-dev libcoap-dev libftdi1-dev libressl-dev libusb-compat-dev libusb-dev mosquitto-dev sqlite-dev zlib-dev && \
     apk add --no-cache \
         curl iputils openssh sqlite \
-        boost boost-date_time boost-system boost-thread \
         eudev-libs libcoap libressl \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
-    tar -xzf cmake-3.15.5.tar.gz && \
-    rm cmake-3.15.5.tar.gz && \
+    cd && wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
+    tar -xzf cmake-3.15.5.tar.gz && rm cmake-3.15.5.tar.gz && \
     cd cmake-3.15.5 && \
     ./bootstrap >/dev/null && \
     make >/dev/null  && \
     make install >/dev/null  && \
-    cd .. && \
-    rm -Rf cmake-3.15.5 && \
+    cd && rm -Rf cmake-3.15.5 && \
     cmake --version && \
+    # Boost
+    cd && wget --quiet https://dl.bintray.com/boostorg/release/1.71.0/source/boost_1_71_0.tar.gz && \
+    tar -xzf boost_1_71_0.tar.gz && rm boost_1_71_0.tar.gz && \
+    cd boost_1_71_0 && \
+    ./bootstrap.sh >/dev/null && \
+    ./b2 stage threading=multi link=static --with-thread --with-system && \
+    ./b2 install threading=multi link=static --with-thread --with-system && \
+    cd && rm -Rf boost && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
@@ -53,11 +58,14 @@ RUN \
     cd /opt && \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
+    #-DUSE_STATIC_BOOST=OFF \
+    #    -DUSE_STATIC_OPENZWAVE=OFF \
+    #    -DOpenZWave=/opt/open-zwave-read-only/libopenzwave.so \
+    #    -DUSE_STATIC_LIBSTDCXX=OFF \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_SHARED_LIBS=True \
-        -DUSE_STATIC_BOOST=OFF \
-        -DUSE_STATIC_LIBSTDCXX=OFF \
+        -DUSE_OPENSSL_STATIC=OFF \
         -Wno-dev -Wno-deprecated \
         CMakeLists.txt && \
     make && \
