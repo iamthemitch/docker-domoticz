@@ -19,15 +19,25 @@ ENV SSLWWW $DEFAULT_SSLWWW
 
 RUN \
     # Packages and system setup
-    #  Not using libexecinfo-dev as causing compilation issues
+    apk add --no-cache --virtual=build-dependencies \
+        coreutils build-base git shadow \
+        libcurl libcoap libusb-compat libusb-dev zlib \
+        boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
     apk add --no-cache \
         curl \
-        coreutils build-base git shadow \
-        boost boost-date_time boost-system boost-thread libcurl udev libcoap libressl libusb libusb-compat sqlite zlib \
-        boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev \
+        boost boost-date_time boost-system boost-thread \
+        iputils libressl openssh sqlite \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    apk add --no-cache --virtual=build-dependencies-edge --repository http://dl-3.alpinelinux.org/alpine/edge/main/ cmake && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
+    tar -xzvf cmake-3.15.5.tar.gz && \
+    rm cmake-3.15.5.tar.gz && \
+    cd cmake-3.15.5 && \
+    ./bootstrap && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -Rf cmake-3.15.5 && \
     cmake --version && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
@@ -44,9 +54,11 @@ RUN \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
     cmake \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DUSE_STATIC_BOOST=OFF \
-      -Wno-dev -Wno-deprecated && \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=True \
+        -DUSE_STATIC_BOOST=OFF \
+        -Wno-dev -Wno-deprecated \
+        CMakeLists.txt && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
@@ -64,7 +76,7 @@ RUN \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
     # Clean
-    apk del coreutils build-base cmake git shadow boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+    apk del --purge build-dependencies && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 
