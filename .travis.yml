@@ -21,7 +21,7 @@ matrix:
       DOCKER_PATH=debian-easy
 
 install:
-  - docker build -t ${DOCKER_BUILD} -f ${DOCKER_PATH}/Dockerfile ${DOCKER_PATH}
+  - travis_wait 60 docker build -t ${DOCKER_BUILD} -f ${DOCKER_PATH}/Dockerfile ${DOCKER_PATH}
   - docker run -d --name=domoticz -p 8080:8080 ${DOCKER_BUILD}
 
 before_script:

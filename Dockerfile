@@ -26,7 +26,7 @@ RUN \
         python3-dev && \
     # CMake 3.14.0 or higher is required
     wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
-    tar -xzvf cmake-3.15.5.tar.gz && \
+    tar -xzf cmake-3.15.5.tar.gz && \
     rm cmake-3.15.5.tar.gz && \
     cd cmake-3.15.5 && \
     ./bootstrap >/dev/null && \
