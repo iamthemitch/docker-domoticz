@@ -25,15 +25,15 @@ RUN \
         libboost-thread-dev libboost-system-dev libcoap-1-0-dev libcurl4-gnutls-dev libssl1.0-dev libudev-dev libusb-dev zlib1g-dev \
         python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz && \
-    tar -xzf cmake-3.14.4.tar.gz && \
-    rm cmake-3.14.4.tar.gz && \
-    cd cmake-3.14.4 && \
-    ./bootstrap && \
-    make && \
-    make install && \
-    cd ..  && \
-    rm -Rf cmake-3.14.4 && \
+    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
+    tar -xzvf cmake-3.15.5.tar.gz && \
+    rm cmake-3.15.5.tar.gz && \
+    cd cmake-3.15.5 && \
+    ./bootstrap >/dev/null && \
+    make >/dev/null  && \
+    make install >/dev/null  && \
+    cd .. && \
+    rm -Rf cmake-3.15.5 && \
     cmake --version && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
@@ -50,8 +50,8 @@ RUN \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
     cmake \
-      -DCMAKE_BUILD_TYPE=Release \
-      -Wno-dev -Wno-deprecated && \
+        -DCMAKE_BUILD_TYPE=Release \
+        -Wno-dev && \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
@@ -84,6 +84,6 @@ USER    domoticz
 VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/plugins", "/opt/domoticz/scripts"]
 
 HEALTHCHECK --interval=5m --timeout=5s \
-  CMD /opt/domoticz/healthcheck.sh
+    CMD /opt/domoticz/healthcheck.sh
 
 ENTRYPOINT ["/opt/domoticz/start.sh"]

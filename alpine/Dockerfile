@@ -22,20 +22,20 @@ RUN \
     apk add --no-cache --virtual=build-dependencies \
         coreutils build-base git shadow \
         libcurl libcoap libusb-compat libusb-dev zlib \
-        boost-dev curl-dev eudev-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+        boost-dev curl-dev eudev-dev libexecinfo-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
     apk add --no-cache \
         curl \
         boost boost-date_time boost-system boost-thread \
         iputils libressl openssh sqlite \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    wget https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
+    wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
     tar -xzvf cmake-3.15.5.tar.gz && \
     rm cmake-3.15.5.tar.gz && \
     cd cmake-3.15.5 && \
-    ./bootstrap && \
-    make && \
-    make install && \
+    ./bootstrap >/dev/null && \
+    make >/dev/null  && \
+    make install >/dev/null  && \
     cd .. && \
     rm -Rf cmake-3.15.5 && \
     cmake --version && \
@@ -57,7 +57,7 @@ RUN \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_SHARED_LIBS=True \
         -DUSE_STATIC_BOOST=OFF \
-        -Wno-dev -Wno-deprecated \
+        -Wno-dev \
         CMakeLists.txt && \
     make && \
     rm -rf /opt/domoticz/.git* && \
@@ -90,6 +90,6 @@ USER    domoticz
 VOLUME  ["/data", "/opt/domoticz/backups", "/opt/domoticz/plugins", "/opt/domoticz/scripts"]
 
 HEALTHCHECK --interval=5m --timeout=5s \
-  CMD /opt/domoticz/healthcheck.sh
+    CMD /opt/domoticz/healthcheck.sh
 
 ENTRYPOINT ["/opt/domoticz/start.sh"]
