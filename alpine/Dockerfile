@@ -21,12 +21,12 @@ RUN \
     # Packages and system setup
     apk add --no-cache --virtual=build-dependencies \
         coreutils build-base git shadow \
-        libcurl libcoap libusb-compat libusb-dev zlib \
-        boost-dev curl-dev eudev-dev libexecinfo-dev libcoap-dev libressl-dev libusb-dev libusb-compat-dev sqlite-dev zlib-dev && \
+        linux-headers \
+        boost-dev curl-dev eudev-dev libcoap-dev libftdi1-dev libressl-dev libusb-compat-dev libusb-dev mosquitto-dev sqlite-dev zlib-dev && \
     apk add --no-cache \
-        curl \
+        curl iputils openssh sqlite \
         boost boost-date_time boost-system boost-thread \
-        iputils libressl openssh sqlite \
+        eudev-libs libcoap libressl \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
     wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
@@ -57,7 +57,8 @@ RUN \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_SHARED_LIBS=True \
         -DUSE_STATIC_BOOST=OFF \
-        -Wno-dev \
+        -DUSE_STATIC_LIBSTDCXX=OFF \
+        -Wno-dev -Wno-deprecated \
         CMakeLists.txt && \
     make && \
     rm -rf /opt/domoticz/.git* && \
