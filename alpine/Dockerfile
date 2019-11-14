@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.10
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -31,16 +31,16 @@ RUN \
     cd && wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
     tar -xzf cmake-3.15.5.tar.gz && rm cmake-3.15.5.tar.gz && \
     cd cmake-3.15.5 && \
-    ./bootstrap >/dev/null && \
-    make >/dev/null  && \
-    make install >/dev/null  && \
+    ./bootstrap && \
+    make && \
+    make install && \
     cd && rm -Rf cmake-3.15.5 && \
     cmake --version && \
     # Boost
     cd && wget --quiet https://dl.bintray.com/boostorg/release/1.71.0/source/boost_1_71_0.tar.gz && \
     tar -xzf boost_1_71_0.tar.gz && rm boost_1_71_0.tar.gz && \
     cd boost_1_71_0 && \
-    ./bootstrap.sh >/dev/null && \
+    ./bootstrap.sh && \
     ./b2 stage threading=multi link=static --with-thread --with-system && \
     ./b2 install threading=multi link=static --with-thread --with-system && \
     cd && rm -Rf boost && \
@@ -58,13 +58,13 @@ RUN \
     cd /opt && \
     git clone --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     cd domoticz && \
+    #-DBUILD_SHARED_LIBS=True \
     #-DUSE_STATIC_BOOST=OFF \
-    #    -DUSE_STATIC_OPENZWAVE=OFF \
-    #    -DOpenZWave=/opt/open-zwave-read-only/libopenzwave.so \
-    #    -DUSE_STATIC_LIBSTDCXX=OFF \
+    #-DUSE_STATIC_OPENZWAVE=OFF \
+    #-DOpenZWave=/opt/open-zwave-read-only/libopenzwave.so \
+    #-DUSE_STATIC_LIBSTDCXX=OFF \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=True \
         -DUSE_OPENSSL_STATIC=OFF \
         -Wno-dev -Wno-deprecated \
         CMakeLists.txt && \
