@@ -46,7 +46,7 @@ RUN \
     ./b2 install threading=multi link=static --with-thread --with-system --with-chrono && \
     cd && rm -Rf boost && \
     # OpenZWave
-    cd && git clone --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
+    cd && git clone --branch 1.4 --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
     cd open-zwave-read-only && \
     make && \
     make install && \
