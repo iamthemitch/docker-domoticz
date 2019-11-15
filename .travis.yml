@@ -19,6 +19,10 @@ matrix:
     env:
       DOCKER_BUILD=domoticz:debian-easy
       DOCKER_PATH=debian-easy
+  - name: "alpine-pkg"
+    env:
+      DOCKER_BUILD=domoticz:alpine-pkg
+      DOCKER_PATH=alpine-pkg
 
 install:
   - docker build -t ${DOCKER_BUILD} -f ${DOCKER_PATH}/Dockerfile ${DOCKER_PATH}

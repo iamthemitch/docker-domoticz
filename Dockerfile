@@ -63,6 +63,7 @@ RUN \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
+    mkdir -p /opt/domoticz/plugins &&  \
     ## BatteryLevel
     cd /opt/domoticz/plugins && \
     git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
@@ -76,6 +77,8 @@ RUN \
     mkdir /data && chown -R domoticz: /data && \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
+    # Check
+    /opt/domoticz/domoticz -version && \
     # Clean
     apt-get remove --purge -y build-essential git wget && \
     apt-get autoremove -y && apt-get clean && \

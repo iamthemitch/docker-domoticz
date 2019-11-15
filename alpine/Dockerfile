@@ -23,27 +23,15 @@ RUN \
         coreutils build-base git shadow \
         linux-headers \
         curl-dev eudev-dev libcoap-dev libftdi1-dev libressl-dev libusb-compat-dev libusb-dev mosquitto-dev sqlite-dev zlib-dev && \
-    apk add --no-cache \
+    apk add --no-cache --virtual=lib-dependencies \
         curl iputils openssh sqlite \
-        eudev-libs libcoap libressl \
+        eudev-libs libcoap libressl libusb-compat mosquitto-libs \
         python3 python3-dev && \
     # CMake 3.14.0 or higher is required
-    cd && wget --quiet https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz && \
-    tar -xzf cmake-3.15.5.tar.gz && rm cmake-3.15.5.tar.gz && \
-    cd cmake-3.15.5 && \
-    ./bootstrap && \
-    make && \
-    make install && \
-    cd && rm -Rf cmake-3.15.5 && \
+    apk add --no-cache --virtual=build-dependencies-edge --repository http://dl-3.alpinelinux.org/alpine/edge/main/ cmake && \
     cmake --version && \
     # Boost
-    cd && wget --quiet https://dl.bintray.com/boostorg/release/1.71.0/source/boost_1_71_0.tar.gz && \
-    tar -xzf boost_1_71_0.tar.gz && rm boost_1_71_0.tar.gz && \
-    cd boost_1_71_0 && \
-    ./bootstrap.sh && \
-    ./b2 stage threading=multi link=static --with-thread --with-system && \
-    ./b2 install threading=multi link=static --with-thread --with-system && \
-    cd && rm -Rf boost && \
+    apk add --no-cache --virtual=lib-dependencies-edge --repository http://dl-3.alpinelinux.org/alpine/edge/main/ boost boost-system boost-thread && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
     usermod -a -G dialout domoticz && \
@@ -71,6 +59,7 @@ RUN \
     make && \
     rm -rf /opt/domoticz/.git* && \
     # Add plugins
+    mkdir -p /opt/domoticz/plugins &&  \
     ## BatteryLevel
     cd /opt/domoticz/plugins && \
     git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
@@ -84,8 +73,10 @@ RUN \
     mkdir /data && chown -R domoticz: /data && \
     mkdir /opt/domoticz/backups && \
     chown -R domoticz: /opt/domoticz && \
+    # Check
+    /opt/domoticz/domoticz -version && \
     # Clean
-    apk del --purge build-dependencies && \
+    apk del --purge build-dependencies build-dependencies-edge && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 

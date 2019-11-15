@@ -20,8 +20,7 @@ ENV SSLWWW $DEFAULT_SSLWWW
 RUN \
     # Packages and system setup
     apt-get update && apt-get install -y \
-        curl procps wget \
-        git \
+        curl git procps wget \
         libcurl3-gnutls libudev-dev python3-dev && \
     # Create user
     adduser --disabled-password --gecos "Domoticz" domoticz && \
@@ -32,8 +31,9 @@ RUN \
     tar -xzf domoticz_release.tgz && \
 	  rm domoticz_release.tgz && \
     # Add plugins
+    mkdir -p /opt/domoticz/plugins &&  \
     ## BatteryLevel
-    mkdir -p /opt/domoticz/plugins && cd /opt/domoticz/plugins && \
+    cd /opt/domoticz/plugins && \
     git clone --depth 1 https://github.com/999LV/BatteryLevel.git BatteryLevel && \
     rm -rf /opt/domoticz/plugins/BatteryLevel/.git* && \
     ## Tradfri
@@ -46,6 +46,8 @@ RUN \
     mkdir -p /opt/domoticz/backups && \
     touch /data/domoticz.db && \
     chown -R domoticz: /data /opt/domoticz && \
+    # Check
+    /opt/domoticz/domoticz -version && \
     # Clean
     apt-get remove --purge -y git wget && \
     apt-get autoremove -y && apt-get clean && \
