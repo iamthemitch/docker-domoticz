@@ -45,16 +45,16 @@ RUN \
     ./b2 stage threading=multi link=static --with-thread --with-system --with-chrono && \
     ./b2 install threading=multi link=static --with-thread --with-system --with-chrono && \
     cd && rm -Rf boost && \
+    # Domoticz (need patch file)
+    cd /opt && git clone --branch master --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
     # OpenZWave
-    cd && git clone --branch 1.4 --depth 1 https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
-    cd open-zwave-read-only && \
+    cd && git clone https://github.com/OpenZWave/open-zwave.git open-zwave-read-only && \
+    cd open-zwave-read-only && git checkout v1.4-3335-g74e05982 && patch -p1 < /opt/domoticz/patches/domoticz-open-zwave.patch && \
     make && \
     make install && \
     cd && rm -rf open-zwave-read-only && \
     # Domoticz
-    cd /opt && \
-    git clone --branch master --depth 1 https://github.com/domoticz/domoticz.git domoticz && \
-    cd domoticz && \
+    cd /opt/domoticz && \
     ## Patch
     sed -i 's#^SET(DOMO_MIN_LIBBOOST_VERSION.*#SET(DOMO_MIN_LIBBOOST_VERSION 1.66.0)#' CMakeLists.txt && \
     ## Build
