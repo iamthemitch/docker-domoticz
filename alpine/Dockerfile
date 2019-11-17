@@ -93,7 +93,7 @@ RUN \
     # Check
     /opt/domoticz/domoticz -version && \
     # Clean
-    apk del --purge build-dependencies build-dependencies-edge && \
+    apk del --purge build-dependencies && \
     rm -rf /var/cache/apk/* && \
     echo DONE
 
