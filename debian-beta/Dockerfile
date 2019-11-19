@@ -21,9 +21,9 @@ RUN \
     # Packages and system setup
     apt-get update && apt-get install -y \
         curl git procps wget \
-        libcurl3-gnutls libudev-dev python3-dev && \
+        libcurl3-gnutls openssl libudev-dev python3-dev && \
     # Create user
-    adduser --disabled-password --gecos "Domoticz" domoticz && \
+    adduser --disabled-password --gecos "Domoticz" domoticz && \  
     usermod -a -G dialout domoticz && \
     # Domoticz
     mkdir -p /opt/domoticz && cd /opt/domoticz && \

@@ -24,7 +24,7 @@ RUN \
         linux-headers \
         curl-dev eudev-dev libcoap-dev libftdi1-dev libressl-dev libusb-compat-dev libusb-dev mosquitto-dev sqlite-dev zlib-dev && \
     apk add --no-cache --virtual=lib-dependencies \
-        curl iputils openssh sqlite \
+        curl iputils openssl sqlite \
         eudev-libs libcoap libressl libusb-compat mosquitto-libs \
         python3 python3-dev && \
     # Create user
